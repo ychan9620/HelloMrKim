@@ -313,6 +313,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text)}
     </div>
   </div>
   <div class="scenes" id="scenesGrid"></div>
+  <div style="text-align:center;padding:32px 0 16px;font-size:11px;color:var(--muted);letter-spacing:.08em">v1.2.0 · Hello Mr. Kim · © 2025</div>
 </div>
 
 <!-- ③ CHAT -->
@@ -843,6 +844,7 @@ function showOverlay(type){
 
 function closeMissionPop(){
   document.getElementById('missionPop').style.display='none';
+  document.getElementById('endBtn').disabled=false;
 }
 
 function manualEnd(){
