@@ -989,9 +989,16 @@ function renderReport(r){
 // UTILS
 // ────────────────────────────────
 function show(id){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.screen').forEach(s=>{
+    s.classList.remove('active');
+    s.scrollTop=0;
+  });
+  const el = document.getElementById(id);
+  el.classList.add('active');
+  el.scrollTop=0;
   window.scrollTo(0,0);
+  document.documentElement.scrollTop=0;
+  document.body.scrollTop=0;
 }
 function addMsg(role,text){
   const msgs=document.getElementById('chatMsgs');
