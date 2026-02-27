@@ -14,7 +14,7 @@
 }
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);height:100vh;overflow:hidden}
 .screen{display:none;height:100vh;overflow-y:auto;animation:fadeUp .4s ease}
-.screen.active{display:flex}
+.screen.active{display:flex;flex-direction:column}
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 
 /* ── ONBOARDING ── */
@@ -185,7 +185,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);hei
 
 /* ── MOBILE ── */
 @media (max-width: 768px) {
-  #sChat{height:100dvh}
+#sChat{height:100dvh}
   .chat-msgs{padding:12px}
   .chat-bottom{padding:10px 12px;position:sticky;bottom:0}
   .chat-top{padding:10px 12px}
@@ -204,16 +204,27 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);hei
   .report-wrap{padding:0}
   .chat-ta{font-size:16px}/* prevent zoom on iOS */
   .input-hint{display:none}/* hide hint on mobile */
-}
-
-@media (max-width: 768px) {
-  #sChat { height: 100svh; display:flex; flex-direction:column; }
+#sChat { height: 100svh; display:flex; flex-direction:column; }
   .chat-msgs { min-height: 0; }
   .chat-bottom { padding-bottom: env(safe-area-inset-bottom, 12px); margin-bottom: 0; }
   .chat-msgs { padding-bottom: 10px; }
   .input-hint { display: none; }
   .chat-ta { font-size: 16px; }
+#sChat { height: 100svh; display:flex; flex-direction:column; }
+  .chat-msgs { min-height: 0; }
+  .chat-bottom { 
+    padding-bottom: max(env(safe-area-inset-bottom, 12px), 12px);
+  }
+  .mission-bar { padding: 8px 14px; }
+  .mission-label { font-size: 12px; }
+  .m-goal { font-size: 11px; padding: 4px 8px; }
+  .sit-strip { font-size: 12px; padding: 8px 14px; }
+  .chat-top { padding: 8px 14px; }
+  .input-hint { display: none; }
+  .chat-ta { font-size: 16px; }
 }
+
+
 
 .mission-card{margin:16px 0;border:1px solid var(--border);background:var(--surface);overflow:hidden;animation:fadeUp .5s ease}
 .mission-card.success{border-color:var(--success)}
@@ -234,20 +245,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);hei
 .mission-card.fail .mission-card-btn{background:var(--danger);color:#fff}
 .mission-card-btn:hover{opacity:.9}
 
-@media (max-width: 768px) {
-  #sChat { height: 100svh; display:flex; flex-direction:column; }
-  .chat-msgs { min-height: 0; }
-  .chat-bottom { 
-    padding-bottom: max(env(safe-area-inset-bottom, 12px), 12px);
-  }
-  .mission-bar { padding: 8px 14px; }
-  .mission-label { font-size: 12px; }
-  .m-goal { font-size: 11px; padding: 4px 8px; }
-  .sit-strip { font-size: 12px; padding: 8px 14px; }
-  .chat-top { padding: 8px 14px; }
-  .input-hint { display: none; }
-  .chat-ta { font-size: 16px; }
-}
+
 
 .mode-tabs{display:flex;gap:8px;justify-content:center;margin-top:20px}
 .mode-tab{background:none;border:1px solid var(--border);color:var(--muted);padding:7px 20px;
@@ -992,13 +990,15 @@ function renderReport(r){
 // UTILS
 // ────────────────────────────────
 function show(id){
-  document.querySelectorAll('.screen').forEach(s=>{
-    s.classList.remove('active');
-    s.scrollTop=0;
-  });
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   const el = document.getElementById(id);
   el.classList.add('active');
+  // 화면 상단으로 이동
+  window.scrollTo(0,0);
+  document.documentElement.scrollTop=0;
+  document.body.scrollTop=0;
   el.scrollTop=0;
+  setTimeout(()=>{ window.scrollTo(0,0); el.scrollTop=0; }, 50);
 }
 function addMsg(role,text){
   const msgs=document.getElementById('chatMsgs');
