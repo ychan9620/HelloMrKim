@@ -68,7 +68,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .d-h{color:var(--danger);border-color:var(--danger)}
 
 /* ── CHAT ── */
-#sChat{flex-direction:column;height:100vh;overflow:hidden}
+#sChat{flex-direction:column;height:100dvh;overflow:hidden}
 .chat-top{background:var(--surface);border-bottom:1px solid var(--border);
   padding:12px 18px;display:flex;align-items:center;gap:12px;flex-shrink:0}
 .back-btn{background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;padding:4px;transition:color .2s}
@@ -208,8 +208,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 
 @media (max-width: 768px) {
   #sChat { height: 100svh; }
-  .chat-bottom { padding-bottom: env(safe-area-inset-bottom, 80px); margin-bottom: 60px; }
-  .chat-msgs { padding-bottom: 20px; }
+  .chat-bottom { padding-bottom: env(safe-area-inset-bottom, 12px); margin-bottom: 0; }
+  .chat-msgs { padding-bottom: 10px; }
   .input-hint { display: none; }
   .chat-ta { font-size: 16px; }
 }
@@ -236,7 +236,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 @media (max-width: 768px) {
   #sChat { height: 100svh; }
   .chat-bottom { 
-    padding-bottom: max(env(safe-area-inset-bottom, 16px), 70px);
+    padding-bottom: max(env(safe-area-inset-bottom, 12px), 12px);
   }
   .mission-bar { padding: 8px 14px; }
   .mission-label { font-size: 12px; }
@@ -754,6 +754,20 @@ async function sendMsg(){
     addMsg('ai','⚠️ 오류가 발생했어요. 다시 시도해주세요.');
   }
   setLoad(false);
+}
+
+
+let missionOpen = true;
+function toggleMission(){
+  missionOpen = !missionOpen;
+  const goals = document.getElementById('mGoals');
+  const icon = document.getElementById('missionToggleIcon');
+  if(goals){
+    goals.style.display = missionOpen ? '' : 'none';
+  }
+  if(icon){
+    icon.textContent = missionOpen ? '▲' : '▼';
+  }
 }
 
 async function callAnthropicAPI(payload){
