@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hello Mr. Kim</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0d0d0f;--surface:#141418;--surface2:#1c1c22;--border:#2a2a35;
+  --accent:#e8b86d;--accent2:#6d9ee8;--danger:#e86d6d;--success:#6de8a0;
+  --text:#f0ede8;--muted:#7a7a8a;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.screen{display:none;min-height:100vh;animation:fadeUp .4s ease}
+.screen.active{display:flex}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── ONBOARDING ── */
+#sOnboard{flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;
+  background:radial-gradient(ellipse at 50% 0%,#1a1520 0%,var(--bg) 70%)}
+.brand{text-align:center;margin-bottom:44px}
+.brand-name{font-family:'Cormorant Garamond',serif;font-size:58px;letter-spacing:-.02em;
+  background:linear-gradient(135deg,#fff 40%,var(--accent));-webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;background-clip:text}
+.brand-sub{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+.card{background:var(--surface);border:1px solid var(--border);padding:36px;width:100%;max-width:480px}
+.card-title{font-family:'Cormorant Garamond',serif;font-size:26px;margin-bottom:24px;color:var(--accent)}
+.field{margin-bottom:18px}
+.field label{display:block;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:7px}
+.field input,.field select{width:100%;background:var(--surface2);border:1px solid var(--border);
+  color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;padding:11px 14px;outline:none;transition:border-color .2s}
+.field input:focus,.field select:focus{border-color:var(--accent)}
+.field select option{background:var(--surface2)}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.level-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.level-btn{background:var(--surface2);border:1px solid var(--border);color:var(--muted);
+  font-family:'DM Sans',sans-serif;font-size:13px;padding:10px 12px;cursor:pointer;transition:all .2s;text-align:left;line-height:1.4}
+.level-btn.sel{border-color:var(--accent);color:var(--accent);background:rgba(232,184,109,.08)}
+.primary-btn{width:100%;background:var(--accent);color:#000;border:none;
+  font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;padding:15px;
+  cursor:pointer;margin-top:8px;transition:all .2s;letter-spacing:.04em}
+.primary-btn:hover{background:#f0c87d}
+.primary-btn:disabled{background:var(--border);color:var(--muted);cursor:not-allowed}
+
+/* ── SELECT ── */
+#sSelect{flex-direction:column;align-items:center;padding:48px 20px}
+.sel-header{text-align:center;margin-bottom:40px}
+.sel-welcome{font-size:13px;color:var(--muted);margin-bottom:6px}
+.sel-welcome span{color:var(--accent)}
+.sel-title{font-family:'Cormorant Garamond',serif;font-size:44px;line-height:1.05}
+.sel-title em{font-style:italic;color:var(--accent)}
+.level-tag{display:inline-flex;align-items:center;gap:6px;margin-top:10px;
+  background:var(--surface);border:1px solid var(--border);padding:5px 14px;font-size:12px;color:var(--muted)}
+.scenes{display:grid;grid-template-columns:repeat(auto-fill,minmax(256px,1fr));gap:12px;width:100%;max-width:860px}
+.sc{background:var(--surface);border:1px solid var(--border);padding:22px;cursor:pointer;transition:all .25s}
+.sc:hover{border-color:var(--accent);transform:translateY(-3px);box-shadow:0 16px 40px rgba(232,184,109,.1)}
+.sc-emoji{font-size:30px;margin-bottom:10px}
+.sc-title{font-family:'Cormorant Garamond',serif;font-size:19px;margin-bottom:5px}
+.sc-sub{font-size:12px;color:var(--muted);font-weight:300}
+.sc-goals{margin-top:12px;display:flex;flex-direction:column;gap:3px}
+.sc-goal{font-size:11px;color:var(--muted)}
+.sc-goal::before{content:'○  '}
+.sc-diff{display:inline-block;margin-top:10px;font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:2px 8px;border:1px solid}
+.d-e{color:var(--success);border-color:var(--success)}
+.d-m{color:var(--accent);border-color:var(--accent)}
+.d-h{color:var(--danger);border-color:var(--danger)}
+
+/* ── CHAT ── */
+#sChat{flex-direction:column;height:100vh;overflow:hidden}
+.chat-top{background:var(--surface);border-bottom:1px solid var(--border);
+  padding:12px 18px;display:flex;align-items:center;gap:12px;flex-shrink:0}
+.back-btn{background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;padding:4px;transition:color .2s}
+.back-btn:hover{color:var(--text)}
+.chat-info{flex:1}
+.chat-title{font-family:'Cormorant Garamond',serif;font-size:18px}
+.chat-sub{font-size:11px;color:var(--muted)}
+.end-btn{background:transparent;border:1px solid var(--border);color:var(--muted);
+  font-family:'DM Sans',sans-serif;font-size:11px;letter-spacing:.08em;text-transform:uppercase;
+  padding:7px 14px;cursor:pointer;transition:all .2s}
+.end-btn:hover{border-color:var(--danger);color:var(--danger)}
+
+.mission-bar{background:var(--surface2);border-bottom:1px solid var(--border);padding:9px 18px;flex-shrink:0}
+.mission-label{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+.mission-goals{display:flex;flex-wrap:wrap;gap:6px}
+.m-goal{font-size:11px;padding:3px 10px;border:1px solid var(--border);color:var(--muted);transition:all .4s}
+.m-goal.done{border-color:var(--success);color:var(--success);background:rgba(109,232,160,.06)}
+
+.sit-strip{background:linear-gradient(90deg,#1a1208,#0d0d0f);border-bottom:1px solid #2a2010;
+  padding:9px 18px;font-size:12px;color:#c8a870;font-weight:300;flex-shrink:0;line-height:1.5}
+.sit-strip strong{color:var(--accent)}
+
+.chat-msgs{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:14px}
+.msg-wrap{display:flex;gap:9px;align-items:flex-end}
+.msg-wrap.user{flex-direction:row-reverse;align-self:flex-end;max-width:80%}
+.msg-wrap.ai{align-self:flex-start;max-width:80%}
+.msg-av{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:15px;flex-shrink:0;border:1px solid var(--border)}
+.msg-bubble{padding:11px 15px;font-size:14px;line-height:1.6;font-weight:300}
+.msg-wrap.ai .msg-bubble{background:var(--surface);border:1px solid var(--border)}
+.msg-wrap.user .msg-bubble{background:rgba(232,184,109,.1);border:1px solid rgba(232,184,109,.25)}
+
+.typing{display:flex;gap:4px;align-items:center;padding:12px 15px;
+  background:var(--surface);border:1px solid var(--border)}
+.typing span{width:6px;height:6px;background:var(--muted);border-radius:50%;animation:td 1.2s infinite}
+.typing span:nth-child(2){animation-delay:.2s}.typing span:nth-child(3){animation-delay:.4s}
+@keyframes td{0%,80%,100%{transform:scale(.6);opacity:.4}40%{transform:scale(1);opacity:1}}
+
+.chat-bottom{border-top:1px solid var(--border);background:var(--surface);padding:12px 18px 24px;flex-shrink:0}
+.input-hint{font-size:11px;color:var(--muted);margin-bottom:7px;font-style:italic}
+.input-row{display:flex;gap:8px;align-items:flex-end}
+.chat-ta{flex:1;background:var(--surface2);border:1px solid var(--border);color:var(--text);
+  font-family:'DM Sans',sans-serif;font-size:14px;padding:10px 13px;outline:none;resize:none;
+  min-height:42px;max-height:120px;transition:border-color .2s}
+.chat-ta:focus{border-color:var(--accent)}
+.chat-ta::placeholder{color:var(--muted)}
+.send-btn{background:var(--accent);color:#000;border:none;width:42px;height:42px;
+  font-size:18px;cursor:pointer;flex-shrink:0;transition:all .2s;display:flex;align-items:center;justify-content:center}
+.send-btn:hover{background:#f0c87d}
+.send-btn:disabled{background:var(--border);cursor:not-allowed}
+
+/* ── OVERLAY ── */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.88);display:flex;align-items:center;
+  justify-content:center;z-index:999;animation:fadeIn .3s ease}
+.overlay.hidden{display:none}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.ov-card{background:var(--surface);border:1px solid var(--border);padding:44px 36px;
+  text-align:center;max-width:380px;width:90%;animation:pop .4s cubic-bezier(.34,1.56,.64,1)}
+@keyframes pop{from{transform:scale(.8);opacity:0}to{transform:scale(1);opacity:1}}
+.ov-emoji{font-size:60px;margin-bottom:14px}
+.ov-title{font-family:'Cormorant Garamond',serif;font-size:34px;margin-bottom:6px}
+.ov-sub{font-size:13px;color:var(--muted);margin-bottom:26px;font-weight:300;line-height:1.6}
+.ov-btn{width:100%;border:none;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;
+  padding:14px;cursor:pointer;transition:background .2s}
+.ov-btn.ok{background:var(--accent);color:#000}
+.ov-btn.ok:hover{background:#f0c87d}
+.ov-btn.bad{background:var(--danger);color:#fff}
+.ov-btn.bad:hover{background:#f07070}
+
+/* ── REPORT ── */
+#sReport{flex-direction:column;align-items:center;padding:48px 20px;
+  background:radial-gradient(ellipse at 50% 0%,#1a1520 0%,var(--bg) 60%)}
+.report-wrap{width:100%;max-width:640px}
+.r-eyebrow{font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.r-title{font-family:'Cormorant Garamond',serif;font-size:38px;line-height:1.1;margin-bottom:20px}
+.result-banner{display:flex;align-items:center;gap:14px;padding:14px 18px;border:1px solid}
+.result-banner.success{border-color:var(--success);background:rgba(109,232,160,.05)}
+.result-banner.fail{border-color:var(--danger);background:rgba(232,109,109,.05)}
+.result-banner.manual{border-color:var(--accent2);background:rgba(109,158,232,.05)}
+.res-icon{font-size:34px}
+.res-main{font-family:'Cormorant Garamond',serif;font-size:22px}
+.res-sub{font-size:12px;color:var(--muted);margin-top:2px;font-weight:300}
+.score-row{display:flex;align-items:baseline;gap:18px;margin:22px 0}
+.s-grade{font-family:'Cormorant Garamond',serif;font-size:68px;color:var(--accent);line-height:1}
+.s-detail{display:flex;flex-direction:column;gap:3px}
+.s-stars{font-size:18px}
+.s-pts{font-size:26px;color:var(--muted)}
+.r-sec{margin-top:26px;padding-top:26px;border-top:1px solid var(--border)}
+.r-sec-title{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.r-text{font-size:14px;font-weight:300;line-height:1.8}
+.dlg-list{display:flex;flex-direction:column;gap:9px}
+.dlg-item{padding:11px 14px;border-left:2px solid var(--border)}
+.dlg-item.du{border-left-color:var(--accent);background:rgba(232,184,109,.04)}
+.dlg-item.da{border-left-color:var(--accent2);background:rgba(109,158,232,.03)}
+.dlg-who{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+.dlg-en{font-size:14px}
+.dlg-ko{font-size:12px;color:var(--muted);margin-top:2px;font-style:italic}
+.dlg-tip{margin-top:5px;font-size:11px;color:var(--accent);background:rgba(232,184,109,.08);padding:3px 8px;display:inline-block}
+.final-box{background:var(--surface);border:1px solid var(--border);padding:18px;margin-top:24px}
+.final-label{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:7px}
+.r-actions{display:flex;gap:10px;margin-top:28px}
+.r-btn{flex:1;background:var(--surface);border:1px solid var(--border);color:var(--text);
+  font-family:'DM Sans',sans-serif;font-size:13px;padding:13px;cursor:pointer;transition:all .2s}
+.r-btn:hover{border-color:var(--accent);color:var(--accent)}
+.r-btn.pri{background:var(--accent);color:#000;border-color:var(--accent)}
+.r-btn.pri:hover{background:#f0c87d}
+.pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.pill{font-size:11px;padding:3px 10px;background:var(--surface2);border:1px solid var(--border);color:var(--muted)}
+
+.hmk-brand{font-family:'Cormorant Garamond',serif;font-size:42px;letter-spacing:-.01em;
+  background:linear-gradient(135deg,#fff 40%,var(--accent));-webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;background-clip:text;line-height:1}
+.hmk-slogan{font-size:13px;color:var(--muted);letter-spacing:.08em;margin-top:6px}
+
+/* ── MOBILE ── */
+@media (max-width: 768px) {
+  #sChat{height:100dvh}
+  .chat-msgs{padding:12px}
+  .chat-bottom{padding:10px 12px;position:sticky;bottom:0}
+  .chat-top{padding:10px 12px}
+  .mission-bar{padding:8px 12px}
+  .mission-goals{gap:4px}
+  .m-goal{font-size:10px;padding:2px 8px}
+  .sit-strip{font-size:11px;padding:7px 12px}
+  .msg-wrap{max-width:90%}
+  .msg-bubble{font-size:13px;padding:9px 12px}
+  .sel-title{font-size:32px}
+  .hmk-brand{font-size:32px}
+  .scenes{grid-template-columns:1fr}
+  .sc{padding:18px}
+  #sSelect{padding:28px 16px}
+  #sReport{padding:28px 16px}
+  .report-wrap{padding:0}
+  .chat-ta{font-size:16px}/* prevent zoom on iOS */
+  .input-hint{display:none}/* hide hint on mobile */
+}
+
+@media (max-width: 768px) {
+  #sChat { height: 100svh; }
+  .chat-bottom { padding-bottom: env(safe-area-inset-bottom, 80px); margin-bottom: 60px; }
+  .chat-msgs { padding-bottom: 20px; }
+  .input-hint { display: none; }
+  .chat-ta { font-size: 16px; }
+}
+
+.mission-card{margin:16px 0;border:1px solid var(--border);background:var(--surface);overflow:hidden;animation:fadeUp .5s ease}
+.mission-card.success{border-color:var(--success)}
+.mission-card.fail{border-color:var(--danger)}
+.mission-card-header{padding:16px 18px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border)}
+.mission-card.success .mission-card-header{background:rgba(109,232,160,.06)}
+.mission-card.fail .mission-card-header{background:rgba(232,109,109,.06)}
+.mission-card-emoji{font-size:28px}
+.mission-card-title{font-family:'Cormorant Garamond',serif;font-size:22px}
+.mission-card-sub{font-size:12px;color:var(--muted);margin-top:2px}
+.mission-card-goals{padding:14px 18px;display:flex;flex-direction:column;gap:6px;border-bottom:1px solid var(--border)}
+.mission-card-goal{font-size:13px;display:flex;align-items:center;gap:8px}
+.mission-card-goal.done{color:var(--success)}
+.mission-card-goal.fail{color:var(--muted);text-decoration:line-through}
+.mission-card-btn{display:block;width:100%;background:var(--accent);color:#000;border:none;
+  font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;padding:16px;
+  cursor:pointer;text-align:center;transition:background .2s}
+.mission-card.fail .mission-card-btn{background:var(--danger);color:#fff}
+.mission-card-btn:hover{opacity:.9}
+</style>
+</head>
+<body>
+
+<!-- ① ONBOARDING -->
+<div id="sOnboard" class="screen">
+  <div class="brand">
+    <div class="brand-name">SpeakOut</div>
+    <div class="brand-sub">AI English Roleplay Coach</div>
+  </div>
+  <div class="card">
+    <div class="card-title">프로필을 설정해주세요</div>
+    <div class="field"><label>이름</label><input type="text" id="fname" placeholder="홍길동"></div>
+    <div class="field-row">
+      <div class="field"><label>생년월일</label><input type="date" id="fbirth"></div>
+      <div class="field"><label>성별</label>
+        <select id="fgender"><option value="">선택</option><option value="male">남성</option><option value="female">여성</option></select>
+      </div>
+    </div>
+    <div class="field">
+      <label>영어 수준</label>
+      <div class="level-grid">
+        <button class="level-btn" data-lv="beginner" onclick="selLv(this)">🌱 왕초보<br><small style="font-size:10px;color:var(--muted)">알파벳은 알아요</small></button>
+        <button class="level-btn" data-lv="elementary" onclick="selLv(this)">📗 초급<br><small style="font-size:10px;color:var(--muted)">간단한 단어 알아요</small></button>
+        <button class="level-btn" data-lv="intermediate" onclick="selLv(this)">📘 중급<br><small style="font-size:10px;color:var(--muted)">기본 대화 가능해요</small></button>
+        <button class="level-btn" data-lv="advanced" onclick="selLv(this)">📙 고급<br><small style="font-size:10px;color:var(--muted)">자유롭게 말해요</small></button>
+      </div>
+    </div>
+    <div class="field"><label>학습 목표</label>
+      <select id="fgoal">
+        <option value="travel">✈️ 해외여행</option>
+        <option value="business">💼 비즈니스</option>
+        <option value="daily">☕ 일상회화</option>
+        <option value="all">🌍 전체</option>
+      </select>
+    </div>
+    <button class="primary-btn" onclick="startApp()">시작하기 →</button>
+  </div>
+</div>
+
+<!-- ② SELECT -->
+<div id="sSelect" class="screen active">
+  <div class="sel-header">
+    <div class="hmk-brand">Hello Mr. Kim</div>
+    <div class="hmk-slogan">틀려도 괜찮아, 일단 말해봐</div>
+    <h1 class="sel-title" style="margin-top:24px">어떤 상황에<br><em>도전</em>할까요?</h1>
+    <div style="display:flex;align-items:center;gap:10px;margin-top:12px;justify-content:center">
+      <span style="font-size:12px;color:var(--muted)">난이도</span>
+      <select id="lvSelect" onchange="changeLevel(this.value)" style="background:var(--surface);border:1px solid var(--border);color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;padding:5px 12px;outline:none;cursor:pointer">
+        <option value="beginner">🌱 왕초보</option>
+        <option value="elementary">📗 초급</option>
+        <option value="intermediate" selected>📘 중급</option>
+        <option value="advanced">📙 고급</option>
+      </select>
+    </div>
+  </div>
+  <div class="scenes" id="scenesGrid"></div>
+</div>
+
+<!-- ③ CHAT -->
+<div id="sChat" class="screen">
+  <div class="chat-top">
+    <button class="back-btn" onclick="confirmBack()">←</button>
+    <div id="cTopEmoji" style="font-size:22px">🏨</div>
+    <div class="chat-info">
+      <div class="chat-title" id="cTopTitle"></div>
+      <div class="chat-sub" id="cTopSub"></div>
+    </div>
+    <button class="end-btn" id="endBtn" onclick="manualEnd()">대화 종료</button>
+  </div>
+  <div class="mission-bar">
+    <div class="mission-label" style="display:flex;justify-content:space-between">🎯 미션 <span id="turnCounter" style="color:var(--muted)">0 / 20턴</span></div>
+    <div class="mission-goals" id="mGoals"></div>
+  </div>
+  <div class="sit-strip" id="sitStrip"></div>
+  <div class="chat-msgs" id="chatMsgs"></div>
+  <div class="chat-bottom">
+    <div class="input-hint">💬 영어로! 콩글리시도 OK · Ctrl+Enter 전송</div>
+    <div class="input-row">
+      <textarea class="chat-ta" id="chatTa" placeholder="Type in English..." rows="1"></textarea>
+      <button class="send-btn" id="sendBtn" onclick="sendMsg()">↑</button>
+    </div>
+  </div>
+</div>
+
+<!-- overlay removed -->
+
+<!-- ④ REPORT -->
+<div id="sReport" class="screen">
+  <div class="report-wrap">
+    <div class="r-eyebrow">대화 리포트</div>
+    <div class="r-title" id="rTitle"></div>
+    <div id="rContent"><div style="text-align:center;padding:60px 0;color:var(--muted)">📊 분석 중...</div></div>
+  </div>
+</div>
+
+<script>
+// ────────────────────────────────
+// DATA
+// ────────────────────────────────
+const SCENES = {
+  hotel:{emoji:'🏨',title:'호텔 체크인',sub:'Hotel Front Desk · Bali',diff:'easy',
+    sit:'<strong>🌙 신혼여행 발리!</strong> 예약자: <strong>내 이름</strong> / 예약번호 <strong>#HB2024</strong> / 더블룸 3박. 오션뷰 업그레이드도 노려보세요!',
+    goals:['호텔 체크인 미션 준비 중...','...','...'],  // replaced by AI
+    aiRole:'a friendly hotel front desk clerk at a luxury Bali resort',
+    aiContext:'Reservation exists for the student\'s name, #HB2024, 3 nights double room. Ocean view upgrade IS available. End scenario naturally after giving room key.',
+  },
+  airport:{emoji:'✈️',title:'공항 탑승수속',sub:'Airport Check-in · Incheon',diff:'easy',
+    sit:'<strong>✈️ 뉴욕행 KE081!</strong> 이코노미 예약. 업그레이드 or 비상구 좌석 요청해보세요!',
+    goals:['공항 탑승수속 미션 준비 중...','...','...'],  // replaced by AI
+    aiRole:'a professional airline check-in agent',
+    aiContext:'Flight KE081 to New York. Business class is FULL. Emergency exit seat IS available. End after giving boarding pass, Gate 23.',
+  },
+  restaurant:{emoji:'🍽️',title:'레스토랑 주문',sub:'Fine Dining · Paris',diff:'medium',
+    sit:'<strong>🍷 파리 파인다이닝!</strong> 오늘의 특선 메뉴를 묻고 주문하세요. 새우 알레르기 있어요!',
+    goals:['레스토랑 미션 준비 중...','...','...'],  // replaced by AI
+    aiRole:'an elegant French waiter',
+    aiContext:'Specials: Duck confit, Lobster bisque (shellfish!), Beef tenderloin. Warn about shellfish if allergy mentioned. End after order confirmed.',
+  },
+  shopping:{emoji:'🛍️',title:'쇼핑 & 교환',sub:'Clothing Store · NYC',diff:'medium',
+    sit:'<strong>🛒 재킷 교환!</strong> 어제 산 재킷이 작아요. 영수증 있음. 교환 or 환불!',
+    goals:['쇼핑 미션 준비 중...','...','...'],  // replaced by AI
+    aiRole:'a store clerk at a clothing boutique',
+    aiContext:'Exchanges/refunds OK within 7 days with receipt. Larger size L IS in stock. End after transaction complete.',
+  },
+  doctor:{emoji:'🏥',title:'병원 진료',sub:'International Clinic',diff:'hard',
+    sit:'<strong>🤒 해외에서 아파요!</strong> 두통+발열(38.5도)+목통증. 증상을 설명하고 처방을 받으세요.',
+    goals:['병원 미션 준비 중...','...','...'],  // replaced by AI
+    aiRole:'a doctor at an international clinic',
+    aiContext:'Likely viral tonsillitis. Prescribe rest, fluids, ibuprofen, throat lozenges. End after prescription given.',
+  },
+  meeting:{emoji:'💼',title:'비즈니스 미팅',sub:'TechCorp USA HQ',diff:'hard',
+    sit:'<strong>💼 미국 파트너사 첫 미팅!</strong> 한국 IT 회사 영업팀장으로 자기소개 후 협력 제안!',
+    goals:['비즈니스 미션 준비 중...','...','...'],  // replaced by AI
+    aiRole:'a Sales Director at TechCorp USA',
+    aiContext:'Interested in IT solutions. End after agreeing to follow up / move forward.',
+  },
+};
+
+const LEVELS = {
+  beginner:{label:'🌱 왕초보',tolerance:8,
+    personality:`Very warm and patient. Accept ANY attempt — single words, Konglish, gestures described in text. 
+Always infer the student's intent and proceed helpfully. Give lots of encouragement and hints.
+Example: if student says "hi. reservation. Kim." just say "Of course! Let me look up your reservation, Mr. Kim!"`},
+  elementary:{label:'📗 초급',tolerance:6,
+    personality:`Friendly and understanding like a real hotel/service staff. 
+Accept broken sentences and Konglish naturally — infer meaning from context.
+Example: "my name Mr.cho. HB2024. check please" → understand they want to check in and proceed.
+Only ask for clarification if you truly cannot understand the intent at all.`},
+  intermediate:{label:'📘 중급',tolerance:5,
+    personality:`Behave like a real professional service staff in the real world.
+Understand broken English and Konglish as long as the meaning is clear — DO NOT ask to rephrase if you understood the intent.
+Only say "I'm sorry, could you repeat that?" if the message is truly incomprehensible.
+Example: "booking check please" with a reservation number → just check it, don't demand perfect grammar.`},
+  advanced:{label:'📙 고급',tolerance:3,
+    personality:`Strict real-world professional. Expect reasonably complete sentences.
+If a message is just one or two words with no clear meaning, ask for clarification once.
+Do not give hints. Treat as a real foreigner would.`},
+};
+
+// ────────────────────────────────
+// STATE
+// ────────────────────────────────
+let profile={}, scene=null, history=[], isLoading=false, endReason=null, loadEl=null;
+let goalsCompleted=[], failStreak=0, missionEnded=false, turnCount=0;
+let selectedLv='';
+
+// ────────────────────────────────
+// ONBOARDING
+// ────────────────────────────────
+function selLv(btn){
+  document.querySelectorAll('.level-btn').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+  selectedLv=btn.dataset.lv;
+}
+
+function startApp(){
+  const name=document.getElementById('fname').value.trim();
+  const birth=document.getElementById('fbirth').value;
+  const gender=document.getElementById('fgender').value;
+  const goal=document.getElementById('fgoal').value;
+  if(!name||!birth||!gender||!selectedLv){alert('모든 항목을 입력해주세요!');return;}
+  const age=new Date().getFullYear()-new Date(birth).getFullYear();
+  profile={name,birth,gender,goal,level:selectedLv,age};
+  buildSelect();
+  show('sSelect');
+}
+
+// ────────────────────────────────
+// SELECT
+// ────────────────────────────────
+function buildSelect(){
+  if(document.getElementById('wName'))document.getElementById('wName').textContent=profile.name;
+  const lc=LEVELS[profile.level];
+  // level shown in combo box
+  const grid=document.getElementById('scenesGrid');
+  grid.innerHTML='';
+  Object.entries(SCENES).forEach(([key,sc])=>{
+    const dc={easy:'d-e',medium:'d-m',hard:'d-h'}[sc.diff];
+    const dl={easy:'초급',medium:'중급',hard:'고급'}[sc.diff];
+    grid.innerHTML+=`<div class="sc" onclick="confirmScene('${key}')">
+      <div class="sc-emoji">${sc.emoji}</div>
+      <div class="sc-title">${sc.title}</div>
+      <div class="sc-sub">${sc.sub}</div>
+      <div class="sc-goals">${`<div class="sc-goal" style="color:var(--accent);font-size:11px">🎲 매번 새로운 미션 랜덤 생성</div>`}</div>
+      <div class="sc-diff ${dc}">${dl}</div>
+    </div>`;
+  });
+}
+
+// ────────────────────────────────
+// CHAT
+// ────────────────────────────────
+async function startScene(key){
+  scene=Object.assign({}, SCENES[key]);
+  history=[];
+  failStreak=0;
+  missionEnded=false;
+  endReason=null;
+  turnCount=0;
+
+  document.getElementById('cTopEmoji').textContent=scene.emoji;
+  document.getElementById('cTopTitle').textContent=scene.title;
+  document.getElementById('cTopSub').textContent=scene.sub;
+  document.getElementById('sitStrip').innerHTML=scene.sit;
+  document.getElementById('chatMsgs').innerHTML='';
+  document.getElementById('endBtn').disabled=false;
+
+  // Show loading state for missions
+  const mg=document.getElementById('mGoals');
+  mg.innerHTML=`<div class="m-goal" style="color:var(--muted);font-style:italic">🎲 미션 생성 중...</div>`;
+
+  show('sChat');
+
+  // Generate missions via AI
+  try{
+    const res=await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:300,
+        system:"You generate English learning mission goals. Reply ONLY with a valid JSON array of exactly 3 strings in Korean. No markdown, no explanation.",
+        messages:[{role:"user",content:`Generate 3 specific, realistic mission goals for this English roleplay scenario:
+Scenario: ${scene.title}
+Context: ${scene.sit.replace(/<[^>]+>/g,'')}
+Student level: ${profile.level}
+
+Rules:
+- Each goal should be a concrete action the student must accomplish during conversation
+- Goals should be progressively harder (easy -> medium -> hard)
+- Make them varied and interesting — randomize so they're different each time
+- Return ONLY a JSON array: ["목표1", "목표2", "목표3"]`}]})
+    });
+    const d=await res.json();
+    let goals;
+    try{goals=JSON.parse(d.content[0].text);}
+    catch{goals=JSON.parse(d.content[0].text.replace(/\`\`\`json|\`\`\`/g,'').trim());}
+    scene.goals=goals;
+  }catch(e){
+    // fallback goals
+    scene.goals=['상대방에게 용건을 전달한다','필요한 정보를 요청한다','대화를 성공적으로 마무리한다'];
+  }
+
+  goalsCompleted=new Array(scene.goals.length).fill(false);
+  mg.innerHTML=scene.goals.map((g,i)=>`<div class="m-goal" id="mg${i}">${g}</div>`).join('');
+
+  getGreeting();
+}
+
+function buildSysPrompt(){
+  const lc=LEVELS[profile.level];
+  return `You are ${scene.aiRole}.
+Student: ${profile.name}, age ${profile.age}, English level: ${profile.level}.
+Difficulty personality: ${lc.personality}
+Scenario context: ${scene.aiContext}
+Goals to complete:
+${scene.goals.map((g,i)=>`${i+1}. ${g}`).join('\n')}
+
+STRICT RULES:
+1. Always respond with ONLY a JSON object. No plain text ever.
+2. JSON format:
+{
+  "message": "your in-character English response (1-3 sentences max)",
+  "goals_completed": [0, 1],
+  "mission_success": false,
+  "give_up": false,
+  "fail_reason": null
+}
+- "goals_completed": array of goal indices (0-based) that have been achieved SO FAR in the entire conversation
+- "mission_success": true ONLY when ALL ${scene.goals.length} goals are done and scenario is naturally concluded
+- "give_up": true ONLY after ${lc.tolerance} failed communication attempts — say "I'm going to get my manager" in message
+- "fail_reason": brief reason if give_up is true, else null
+3. Never break character. Never explain grammar. Never write anything outside the JSON.
+4. Konglish tolerance: ${profile.level==='beginner'?'Very high — infer intent from any broken attempt':profile.level==='elementary'?'Medium — try to understand, ask once to clarify':profile.level==='intermediate'?'Low — ask to rephrase broken English':' Very low — treat as real foreigner, say you don\'t understand'}
+5. TURN LIMIT RULES (current turn: ${turnCount}):
+- Turn 1 to 15: Stay fully in character and focus on the mission. Help the conversation progress naturally toward the goals.
+- Turn 16 to 18: Gently start wrapping up. Say things like "Is there anything else I can help you with?" or "I want to make sure we get everything sorted for you."
+- Turn 19: Final nudge. Signal urgency naturally. "I'm afraid I need to assist other guests shortly, shall we finalize everything now?"
+- Turn 20: Force end with a realistic in-character event (manager called away, system goes down, shift change, fully booked, etc.). Set give_up=true.
+- ANY turn: If ALL mission goals are completed and the scenario concludes naturally, set mission_success=true immediately.`;
+}
+
+async function getGreeting(){
+  setLoad(true);
+  try{
+    const res=await callAPI([{role:'user',content:'[Begin the scenario. Greet the guest naturally.]'}]);
+    const parsed=parseAI(res);
+    if(parsed){
+      history.push({role:'assistant',content:res});
+      addMsg('ai',parsed.message);
+    }
+  }catch(e){addMsg('ai','⚠️ 연결 오류');}
+  setLoad(false);
+}
+
+async function sendMsg(){
+  const ta=document.getElementById('chatTa');
+  const text=ta.value.trim();
+  if(!text||isLoading||missionEnded)return;
+  ta.value='';ta.style.height='auto';
+  addMsg('user',text);
+  history.push({role:'user',content:text});
+  turnCount++;
+  document.getElementById('turnCounter').textContent=turnCount+' / 20턴';
+  setLoad(true);
+  try{
+    const rawRes=await callAPI(history);
+    history.push({role:'assistant',content:rawRes});
+    const parsed=parseAI(rawRes);
+    if(!parsed)throw new Error('JSON parse failed');
+
+    addMsg('ai',parsed.message);
+
+    // Update goals
+    (parsed.goals_completed||[]).forEach(i=>{
+      if(!goalsCompleted[i]){
+        goalsCompleted[i]=true;
+        document.getElementById('mg'+i)?.classList.add('done');
+      }
+    });
+
+    // Mission end
+    if(parsed.mission_success&&!missionEnded){
+      missionEnded=true; endReason='success';
+      setTimeout(()=>showOverlay('success'),600);
+    } else if(parsed.give_up&&!missionEnded){
+      missionEnded=true; endReason='giveup';
+      setTimeout(()=>showOverlay('giveup'),1000);
+    }
+  }catch(e){
+    addMsg('ai','⚠️ 오류가 발생했어요. 다시 시도해주세요.');
+  }
+  setLoad(false);
+}
+
+async function callAPI(msgs){
+  const res=await fetch("https://api.anthropic.com/v1/messages",{
+    method:"POST",headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:400,
+      system:buildSysPrompt(),messages:msgs})
+  });
+  const d=await res.json();
+  return d.content[0].text;
+}
+
+function parseAI(raw){
+  try{return JSON.parse(raw);}catch(_){}
+  try{return JSON.parse(raw.replace(/```json|```/g,'').trim());}catch(_){}
+  // extract JSON from text
+  const m=raw.match(/\{[\s\S]*\}/);
+  if(m)try{return JSON.parse(m[0]);}catch(_){}
+  return null;
+}
+
+function showOverlay(type){
+  document.getElementById('endBtn').disabled=true;
+  const msgs=document.getElementById('chatMsgs');
+  const isSuccess = type==='success';
+
+  const goalsHTML = scene.goals.map((g,i)=>`
+    <div class="mission-card-goal ${goalsCompleted[i]?'done':'fail'}">
+      <span>${goalsCompleted[i]?'✅':'❌'}</span>
+      <span>${g}</span>
+    </div>`).join('');
+
+  const card=document.createElement('div');
+  card.className=`mission-card ${isSuccess?'success':'fail'}`;
+  card.innerHTML=`
+    <div class="mission-card-header">
+      <div class="mission-card-emoji">${isSuccess?'🎉':'😓'}</div>
+      <div>
+        <div class="mission-card-title">${isSuccess?'미션 성공!':'미션 실패'}</div>
+        <div class="mission-card-sub">${isSuccess?'모든 목표를 달성했어요! 수고하셨습니다 😊':'AI가 자리를 피했어요. 다음엔 더 잘할 수 있어요!'}</div>
+      </div>
+    </div>
+    <div class="mission-card-goals">${goalsHTML}</div>
+    <button class="mission-card-btn" onclick="goReport()">📊 결과 보기 →</button>
+  `;
+  msgs.appendChild(card);
+  msgs.scrollTop=msgs.scrollHeight;
+}
+
+function manualEnd(){
+  if(missionEnded){ goReport(); return; }
+  showInlineConfirm('대화를 종료하고 결과를 볼까요?', ()=>{
+    missionEnded=true;
+    endReason='manual';
+    goReport();
+  });
+}
+
+function confirmBack(){
+  if(missionEnded){ show('sSelect'); return; }
+  // show inline confirm instead of browser confirm
+  showInlineConfirm('대화를 포기하고 처음으로 돌아갈까요?', ()=>show('sSelect'));
+}
+
+function goReport(){
+  show('sReport');
+  generateReport();
+}
+
+// ────────────────────────────────
+// REPORT
+// ────────────────────────────────
+async function generateReport(){
+  document.getElementById('rTitle').textContent=scene.emoji+' '+scene.title;
+  document.getElementById('rContent').innerHTML='<div style="text-align:center;padding:60px 0;color:var(--muted)">📊 대화 번역 중... (1/2)<br><small style="font-size:12px;margin-top:8px;display:block">잠시만 기다려주세요</small></div>';
+
+  const dlgLines = history.map(m=>{
+    if(m.role==='assistant'){
+      const p=parseAI(m.content);
+      return `[상대방] ${p?p.message:m.content}`;
+    }
+    return `[${profile.name}] ${m.content}`;
+  }).join('\n');
+
+  const goalsSummary=scene.goals.map((g,i)=>`${i+1}. ${g} — ${goalsCompleted[i]?'달성':'미달성'}`).join('\n');
+
+  try{
+    // ── CALL 1: dialog translation ──
+    const res1=await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:4096,
+        system:"You are a translator. Translate each line to Korean and return ONLY valid JSON array. No markdown.",
+        messages:[{role:'user',content:`Translate each line of this conversation to Korean.
+Return JSON array only:
+[{"role":"user or ai","en":"original line","ko":"Korean translation","tip":"for user lines only: one short grammar/vocab tip in Korean, or null if perfect"}]
+
+Conversation:
+${dlgLines}`}]})
+    });
+    const d1=await res1.json();
+    let dlgReview;
+    try{dlgReview=JSON.parse(d1.content[0].text);}
+    catch{dlgReview=JSON.parse(d1.content[0].text.replace(/```json|```/g,'').trim());}
+
+    document.getElementById('rContent').innerHTML='<div style="text-align:center;padding:60px 0;color:var(--muted)">📊 평가 생성 중... (2/2)<br><small style="font-size:12px;margin-top:8px;display:block">거의 다 됐어요!</small></div>';
+
+    // ── CALL 2: evaluation ──
+    const res2=await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1000,
+        system:`You are a warm English tutor. Student: ${profile.name}, age ${profile.age}, level: ${profile.level}. Reply ONLY with valid JSON, no markdown.`,
+        messages:[{role:'user',content:`Evaluate this student's English roleplay.
+Scenario: ${scene.title}, End: ${endReason}
+Goals: ${goalsSummary}
+Student's lines only: ${history.filter(m=>m.role==='user').map(m=>m.content).join(' | ')}
+
+Return JSON:
+{"score":75,"grade":"B","stars":3,"strengths_ko":"잘한 점 1-2문장","improvements_ko":"개선할 점 1-2문장","konglish_count":1,"konglish_examples":["예시"],"best_en":"best sentence","best_ko":"한국어 뜻","final_ko":"따뜻한 총평 2문장"}`}]})
+    });
+    const d2=await res2.json();
+    let eval2;
+    try{eval2=JSON.parse(d2.content[0].text);}
+    catch{eval2=JSON.parse(d2.content[0].text.replace(/```json|```/g,'').trim());}
+
+    renderReport({...eval2, dialog_review: dlgReview});
+  }catch(e){
+    document.getElementById('rContent').innerHTML=`<div style="color:var(--danger)">분석 오류: ${e.message}</div>
+    <div class="r-actions" style="margin-top:20px">
+      <button class="r-btn pri" onclick="show('sSelect')">처음으로 →</button>
+    </div>`;
+  }
+}
+
+function renderReport(r){
+  const stars='⭐'.repeat(r.stars||3)+'☆'.repeat(5-(r.stars||3));
+  const rType=endReason==='success'?'success':endReason==='giveup'?'fail':'manual';
+  const rInfo={
+    success:{icon:'🎉',main:'미션 성공!',sub:'모든 목표를 달성했어요!'},
+    fail:{icon:'😓',main:'미션 실패',sub:'AI가 지배인을 불렀어요. 다음엔 더 잘할 수 있어요!'},
+    manual:{icon:'🏳️',main:'대화 중단',sub:'수고하셨어요!'},
+  }[rType];
+
+  const goalsHTML=scene.goals.map((g,i)=>`
+    <div style="display:flex;align-items:center;gap:8px;font-size:13px;margin-bottom:5px">
+      <span style="color:${goalsCompleted[i]?'var(--success)':'var(--muted)'}">${goalsCompleted[i]?'✅':'○'}</span>
+      <span style="color:${goalsCompleted[i]?'var(--text)':'var(--muted)'}">${g}</span>
+    </div>`).join('');
+
+  const dlgHTML=(r.dialog_review||[]).map(line=>{
+    const isu=line.role==='user';
+    return `<div class="dlg-item ${isu?'du':'da'}">
+      <div class="dlg-who">${isu?'🧑 '+profile.name:scene.emoji+' 상대방'}</div>
+      <div class="dlg-en">${line.en}</div>
+      <div class="dlg-ko">→ ${line.ko}</div>
+      ${line.tip?`<div class="dlg-tip">💡 ${line.tip}</div>`:''}
+    </div>`;
+  }).join('');
+
+  const sceneKey=Object.keys(SCENES).find(k=>SCENES[k]===scene);
+
+  document.getElementById('rContent').innerHTML=`
+    <div class="result-banner ${rType}">
+      <div class="res-icon">${rInfo.icon}</div>
+      <div><div class="res-main">${rInfo.main}</div><div class="res-sub">${rInfo.sub}</div></div>
+    </div>
+    <div class="score-row">
+      <div class="s-grade">${r.grade}</div>
+      <div class="s-detail"><div class="s-stars">${stars}</div><div class="s-pts">${r.score}점</div></div>
+    </div>
+    <div class="r-sec">
+      <div class="r-sec-title">🎯 미션 목표 달성</div>
+      ${goalsHTML}
+    </div>
+    <div class="r-sec">
+      <div class="r-sec-title">📜 대화 전체 리뷰 (한글 번역)</div>
+      <div class="dlg-list">${dlgHTML}</div>
+    </div>
+    <div class="r-sec">
+      <div class="r-sec-title">✅ 잘한 점</div>
+      <div class="r-text">${r.strengths_ko}</div>
+    </div>
+    <div class="r-sec">
+      <div class="r-sec-title">📈 개선할 점</div>
+      <div class="r-text">${r.improvements_ko}</div>
+    </div>
+    ${r.konglish_count>0?`<div class="r-sec">
+      <div class="r-sec-title">🇰🇷 콩글리시 사용 ${r.konglish_count}회</div>
+      <div class="pills">${(r.konglish_examples||[]).map(e=>`<div class="pill">"${e}"</div>`).join('')}</div>
+    </div>`:''}
+    <div class="r-sec">
+      <div class="r-sec-title">⭐ 베스트 문장</div>
+      <div class="r-text" style="font-style:italic;color:var(--accent)">"${r.best_en}"</div>
+      <div class="r-text" style="font-size:12px;color:var(--muted);margin-top:3px">${r.best_ko}</div>
+    </div>
+    <div class="final-box">
+      <div class="final-label">💬 선생님 총평</div>
+      <div class="r-text">${r.final_ko}</div>
+    </div>
+    <div class="r-actions">
+      <button class="r-btn" onclick="startScene('${sceneKey}')">🔄 다시 도전</button>
+      <button class="r-btn pri" onclick="show('sSelect')">다른 상황 →</button>
+    </div>
+  `;
+}
+
+// ────────────────────────────────
+// UTILS
+// ────────────────────────────────
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+function addMsg(role,text){
+  const msgs=document.getElementById('chatMsgs');
+  const div=document.createElement('div');
+  div.className='msg-wrap '+role;
+  div.innerHTML=`<div class="msg-av">${role==='ai'?scene.emoji:'🧑'}</div><div class="msg-bubble">${text}</div>`;
+  msgs.appendChild(div);
+  msgs.scrollTop=msgs.scrollHeight;
+}
+function setLoad(on){
+  isLoading=on;
+  document.getElementById('sendBtn').disabled=on;
+  const msgs=document.getElementById('chatMsgs');
+  if(on){
+    loadEl=document.createElement('div');
+    loadEl.className='msg-wrap ai';
+    loadEl.innerHTML=`<div class="msg-av">${scene.emoji}</div><div class="typing"><span></span><span></span><span></span></div>`;
+    msgs.appendChild(loadEl);msgs.scrollTop=msgs.scrollHeight;
+  }else if(loadEl){loadEl.remove();loadEl=null;}
+}
+document.addEventListener('DOMContentLoaded',()=>{
+  // Default profile for prototype
+  profile={name:'Mr. Kim', age:38, gender:'male', goal:'all', level:'intermediate'};
+  buildSelect();
+  const ta=document.getElementById('chatTa');
+  ta.addEventListener('input',()=>{ta.style.height='auto';ta.style.height=Math.min(ta.scrollHeight,120)+'px';});
+  ta.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.ctrlKey)sendMsg();});
+});
+
+
+function confirmScene(key){
+  const sc = SCENES[key];
+  const lc = LEVELS[profile.level];
+  // Remove existing confirm banner if any
+  const existing = document.getElementById('sceneBanner');
+  if(existing) existing.remove();
+
+  const banner = document.createElement('div');
+  banner.id = 'sceneBanner';
+  banner.style.cssText = `
+    position:fixed;bottom:0;left:0;right:0;
+    background:var(--surface);border-top:1px solid var(--accent);
+    padding:16px 20px;display:flex;align-items:center;gap:14px;
+    z-index:99;animation:fadeUp .3s ease;
+  `;
+  banner.innerHTML = `
+    <div style="font-size:28px">${sc.emoji}</div>
+    <div style="flex:1">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:18px">${sc.title}</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:2px">난이도: ${lc.label}</div>
+    </div>
+    <button onclick="document.getElementById('sceneBanner').remove()" 
+      style="background:none;border:1px solid var(--border);color:var(--muted);padding:8px 14px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;margin-right:8px">
+      취소
+    </button>
+    <button onclick="document.getElementById('sceneBanner').remove();startScene('${key}')" 
+      style="background:var(--accent);color:#000;border:none;padding:8px 18px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500">
+      시작하기 →
+    </button>
+  `;
+  document.body.appendChild(banner);
+}
+
+function changeLevel(lv){
+  profile.level = lv;
+}
+
+let confirmCallback = null;
+function showInlineConfirm(msg, cb){
+  confirmCallback = cb;
+  document.getElementById('confirmMsg').textContent = msg;
+  document.getElementById('confirmOverlay').classList.remove('hidden');
+  document.getElementById('confirmOkBtn').onclick = ()=>{ closeConfirm(); cb(); };
+}
+function closeConfirm(){
+  document.getElementById('confirmOverlay').classList.add('hidden');
+  confirmCallback = null;
+}
+
+</script>
+
+<!-- INLINE CONFIRM -->
+<div class="overlay hidden" id="confirmOverlay">
+  <div class="ov-card">
+    <div class="ov-emoji" id="confirmEmoji">🤔</div>
+    <div class="ov-title" style="font-size:22px" id="confirmMsg"></div>
+    <div id="confirmDetail" style="font-size:13px;color:var(--muted);margin-top:6px"></div>
+    <div style="display:flex;gap:10px;margin-top:20px">
+      <button class="ov-btn" style="background:var(--border);color:var(--text)" onclick="closeConfirm()">취소</button>
+      <button class="ov-btn ok" id="confirmOkBtn">확인</button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
