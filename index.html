@@ -827,7 +827,11 @@ function showOverlay(type){
     </div>
   `;
   msgs.appendChild(card);
-  msgs.scrollTop=msgs.scrollHeight;
+  // Force scroll after render
+  setTimeout(()=>{
+    msgs.scrollTop=msgs.scrollHeight;
+    card.scrollIntoView({behavior:'smooth', block:'end'});
+  }, 100);
 }
 
 
@@ -839,8 +843,8 @@ function closeOverlayCard(btn){
     const btnArea = btn.parentElement;
     btnArea.innerHTML = '<button onclick="goReport()" style="width:100%;padding:12px;background:var(--accent);border:none;color:#000;font-family:\'DM Sans\',sans-serif;font-size:13px;font-weight:600;cursor:pointer;">📊 결과 보기</button>';
   }
-  // re-enable scroll
-  document.getElementById('chatMsgs').scrollTop = 0;
+  // scroll to top to read chat from beginning
+  document.getElementById('chatMsgs').scrollTo({top:0, behavior:'smooth'});
 }
 
 function manualEnd(){
