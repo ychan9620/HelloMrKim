@@ -677,11 +677,12 @@ STRICT RULES:
   "give_up": false,
   "fail_reason": null
 }
-- "goals_completed": array of goal indices (0-based) that have been achieved SO FAR in the entire conversation
+- "goals_completed": array of goal indices (0-based) that have been achieved SO FAR in the entire conversation. Be GENEROUS - if the student attempted the goal even imperfectly, count it as done.
 - "mission_success": true ONLY when ALL ${scene.goals.length} goals are done and scenario is naturally concluded
 - "give_up": true ONLY after ${lc.tolerance} failed communication attempts — say "I'm going to get my manager" in message
 - "fail_reason": brief reason if give_up is true, else null
 3. Never break character. Never explain grammar. Never write anything outside the JSON.
+${isKids ? '3a. You are talking WITH a child, be super enthusiastic, use simple words, be very encouraging and patient. Celebrate every attempt!' : ''}
 4. Konglish tolerance: ${profile.level==='beginner'?'Very high — infer intent from any broken attempt':profile.level==='elementary'?'Medium — try to understand, ask once to clarify':profile.level==='intermediate'?'Low — ask to rephrase broken English':' Very low — treat as real foreigner, say you don\'t understand'}
 5. TURN LIMIT RULES (current turn: ${turnCount}):
 - Turn 1 to 15: Stay fully in character and focus on the mission. Help the conversation progress naturally toward the goals.
