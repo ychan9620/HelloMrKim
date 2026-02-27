@@ -348,7 +348,26 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   </div>
 </div>
 
-<!-- overlay removed -->
+<!-- MISSION POPUP -->
+<div id="missionPop" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);
+  z-index:999;align-items:center;justify-content:center;">
+  <div style="background:#1c1c22;border:1px solid #2a2a35;padding:40px 32px;
+    text-align:center;max-width:320px;width:90%;animation:pop .4s cubic-bezier(.34,1.56,.64,1)">
+    <div id="missionPopEmoji" style="font-size:56px;margin-bottom:12px"></div>
+    <div id="missionPopTitle" style="font-family:'Cormorant Garamond',serif;font-size:32px;margin-bottom:8px"></div>
+    <div id="missionPopSub" style="font-size:13px;color:#7a7a8a;margin-bottom:28px"></div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <button onclick="closeMissionPop()" style="padding:13px;background:none;border:1px solid #2a2a35;
+        color:#f0ede8;font-family:'DM Sans',sans-serif;font-size:14px;cursor:pointer;">
+        💬 대화 내용 보기
+      </button>
+      <button onclick="closeMissionPop();goReport()" style="padding:13px;background:#e8b86d;border:none;
+        color:#000;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;">
+        📊 결과 보기
+      </button>
+    </div>
+  </div>
+</div>
 
 <!-- ④ REPORT -->
 <div id="sReport" class="screen">
@@ -406,19 +425,19 @@ const SCENES = {
 const KIDS_SCENES = {
   kindergarten:{emoji:'🧒',title:'유치원 친구와 대화',sub:'Kindergarten · Playroom',diff:'easy',
     sit:'<strong>🎨 유치원 놀이시간!</strong> 옆에 앉은 외국인 친구에게 먼저 말을 걸어보세요. 같이 놀 수 있어요!',
-    goals:['친구에게 이름을 묻고 내 이름 알려주기','좋아하는 것(장난감, 음식 등) 하나씩 이야기 나누기','같이 놀자고 제안하기'],
+    goals:['...','...','...'],
     aiRole:'a friendly 7-year-old foreign child at kindergarten named Tommy',
     aiContext:'Tommy loves dinosaurs and drawing. He wants to play blocks and share snacks. End naturally after becoming friends and agreeing to play together.',
   },
   soccer:{emoji:'⚽',title:'축구교실 선생님',sub:'Soccer Class · Community Center',diff:'easy',
     sit:'<strong>⚽ 축구교실 첫날!</strong> 코치 선생님께 인사하고 수업을 들을 준비를 해보세요.',
-    goals:['코치 선생님께 인사하고 이름 알려주기','어떤 포지션을 하고 싶은지 말하기','오늘 배울 것이 무엇인지 물어보기'],
+    goals:['...','...','...'],
     aiRole:'a friendly and encouraging soccer coach for young children named Coach Mike',
     aiContext:'First day of soccer class. Coach Mike is very patient with kids. Activities: warm-up, dribbling, simple passing drills. End after child is ready to start practice.',
   },
   mrbeast:{emoji:'🎬',title:'미스터비스트 채널 출연!',sub:'MrBeast Challenge · YouTube',diff:'medium',
     sit:'<strong>🎬 대박! 미스터비스트 챌린지 선발됐어요!</strong> 100만달러 챌린지에 도전! 미스터비스트와 대화하며 미션을 완수하세요!',
-    goals:['미스터비스트에게 자기소개 하기','주어진 챌린지 미션 내용 듣고 이해했다고 대답하기','챌린지 완료 후 상품 받기'],
+    goals:['...','...','...'],
     aiRole:'MrBeast, the famous YouTuber, energetic and fun, hosting a challenge show',
     aiContext:'Kid has been selected for a challenge. MrBeast is super energetic and encouraging. Challenge involves answering questions and completing fun tasks. End after kid completes the challenge and wins a prize.',
   },
@@ -642,6 +661,7 @@ Rules:
 - Each goal should be a concrete action the student must accomplish during conversation
 - Goals should be progressively harder (easy -> medium -> hard)
 - Make them varied and interesting — randomize so they're different each time
+- NEVER use the same goals twice. Be creative with different situations each run.
 - Return ONLY a JSON array: ["목표1", "목표2", "목표3"]`}]});
     let goals;
     try{goals=JSON.parse(d.content[0].text);}
@@ -801,50 +821,17 @@ function parseAI(raw){
 
 function showOverlay(type){
   document.getElementById('endBtn').disabled=true;
-  const msgs=document.getElementById('chatMsgs');
   const isSuccess = type==='success';
-
-  const goalsHTML = scene.goals.map((g,i)=>`
-    <div class="mission-card-goal ${goalsCompleted[i]?'done':'fail'}">
-      <span>${goalsCompleted[i]?'✅':'❌'}</span>
-      <span>${g}</span>
-    </div>`).join('');
-
-  const card=document.createElement('div');
-  card.className=`mission-card ${isSuccess?'success':'fail'}`;
-  card.innerHTML=`
-    <div class="mission-card-header">
-      <div class="mission-card-emoji">${isSuccess?'🎉':'😓'}</div>
-      <div>
-        <div class="mission-card-title">${isSuccess?'미션 성공!':'미션 실패'}</div>
-        <div class="mission-card-sub">${isSuccess?'모든 목표를 달성했어요! 수고하셨습니다 😊':'AI가 자리를 피했어요. 다음엔 더 잘할 수 있어요!'}</div>
-      </div>
-    </div>
-    <div class="mission-card-goals">${goalsHTML}</div>
-    <div style="display:flex;gap:8px;padding:14px 18px">
-      <button onclick="closeOverlayCard(this)" style="flex:1;padding:12px;background:none;border:1px solid var(--border);color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;">💬 대화 내용 보기</button>
-      <button onclick="goReport()" style="flex:1;padding:12px;background:var(--accent);border:none;color:#000;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;">📊 결과 보기</button>
-    </div>
-  `;
-  msgs.appendChild(card);
-  // Force scroll after render
-  setTimeout(()=>{
-    msgs.scrollTop=msgs.scrollHeight;
-    card.scrollIntoView({behavior:'smooth', block:'end'});
-  }, 100);
+  const pop = document.getElementById('missionPop');
+  document.getElementById('missionPopEmoji').textContent = isSuccess ? '🎉' : '😓';
+  document.getElementById('missionPopTitle').textContent = isSuccess ? '미션 성공!' : '미션 실패';
+  document.getElementById('missionPopSub').textContent = isSuccess ? '모든 목표를 달성했어요!' : '다음엔 더 잘할 수 있어요!';
+  pop.style.display = 'flex';
 }
 
 
-function closeOverlayCard(btn){
-  // just scroll to card and let user read chat
-  const card = btn.closest('.mission-card');
-  if(card){
-    // replace buttons with a single result button
-    const btnArea = btn.parentElement;
-    btnArea.innerHTML = '<button onclick="goReport()" style="width:100%;padding:12px;background:var(--accent);border:none;color:#000;font-family:\'DM Sans\',sans-serif;font-size:13px;font-weight:600;cursor:pointer;">📊 결과 보기</button>';
-  }
-  // scroll to top to read chat from beginning
-  document.getElementById('chatMsgs').scrollTo({top:0, behavior:'smooth'});
+function closeMissionPop(){
+  document.getElementById('missionPop').style.display='none';
 }
 
 function manualEnd(){
