@@ -12,8 +12,8 @@
   --accent:#e8b86d;--accent2:#6d9ee8;--danger:#e86d6d;--success:#6de8a0;
   --text:#f0ede8;--muted:#7a7a8a;
 }
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
-.screen{display:none;min-height:100vh;animation:fadeUp .4s ease}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);height:100vh;overflow:hidden}
+.screen{display:none;height:100vh;overflow-y:auto;animation:fadeUp .4s ease}
 .screen.active{display:flex}
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 
@@ -510,7 +510,10 @@ function generateSceneDetails(key){
   const companies = ['TechCorp USA','GlobalSoft Inc','DataBridge Solutions','InnoTech Partners'];
   const coaches = ['Coach Mike','Coach Sarah','Coach James','Coach Emily'];
   const kids = ['Tommy','Emma','Liam','Sophia','Noah','Olivia'];
-  const dinos = ['T-Rex','Triceratops','Brachiosaurus','Velociraptor'];
+  const interests = [
+    'soccer', 'drawing', 'LEGO', 'swimming', 'dancing',
+    'Minecraft', 'superheroes', 'cats', 'robots', 'space'
+  ];
 
   const details = {
     hotel: {
@@ -547,7 +550,7 @@ function generateSceneDetails(key){
     },
     kindergarten: {
       friendName: randomPick(kids),
-      favDino: randomPick(dinos),
+      favThing: randomPick(interests),
     },
     soccer: {
       coachName: randomPick(coaches),
@@ -569,7 +572,7 @@ function applySituation(scene, key, d){
     shopping: `<strong>🛒 ${d.storeName}!</strong> ${d.receiptDate} 산 ${d.item}이 작아요. 영수증 있음. 교환 or 환불!`,
     doctor: `<strong>🤒 해외에서 아파요!</strong> ${d.clinicName}. ${d.symptoms} 증상. 체온 ${d.temp}도. 증상을 설명하고 처방을 받으세요.`,
     meeting: `<strong>💼 ${d.companyName} 첫 미팅!</strong> 한국 IT 회사 영업팀장으로 자기소개 후 ${d.product} 협력 제안!`,
-    kindergarten: `<strong>🎨 유치원 놀이시간!</strong> 옆에 앉은 ${d.friendName}에게 말을 걸어보세요. ${d.friendName}은 ${d.favDino}를 좋아해요!`,
+    kindergarten: `<strong>🎨 유치원 놀이시간!</strong> 옆에 앉은 ${d.friendName}에게 말을 걸어보세요. ${d.friendName}은 ${d.favThing}을 좋아해요!`,
     soccer: `<strong>⚽ 축구교실 첫날!</strong> ${d.coachName}에게 인사하고 오늘 ${d.drill} 연습을 해봐요!`,
     mrbeast: `<strong>🎬 미스터비스트 ${d.challenge}!</strong> 성공하면 ${d.prize} 획득! 도전해보세요!`,
   };
@@ -583,7 +586,7 @@ function applySituation(scene, key, d){
     shopping: `Store is ${d.storeName}. Item: ${d.item} bought ${d.receiptDate}. Exchanges/refunds OK within 7 days with receipt. Larger size IS in stock.`,
     doctor: `Clinic: ${d.clinicName}. Patient has ${d.symptoms}, temp ${d.temp}°C. Prescribe rest, fluids, ibuprofen. End after prescription given.`,
     meeting: `Company: ${d.companyName}. Discuss ${d.product} partnership. Show interest and agree to follow-up meeting.`,
-    kindergarten: `You are ${d.friendName}, a 7-year-old child who loves ${d.favDino}. Become friends and agree to play together.`,
+    kindergarten: `You are ${d.friendName}, a 7-year-old child who loves ${d.favThing}. Talk about your interests naturally. Do NOT keep repeating the same topic. Become friends and agree to play together.`,
     soccer: `You are ${d.coachName}, a friendly kids soccer coach. Today's focus: ${d.drill}. End after warmup begins.`,
     mrbeast: `This is a ${d.challenge}. Prize is ${d.prize}. Be energetic! End after kid completes challenge and wins.`,
   };
@@ -996,9 +999,6 @@ function show(id){
   const el = document.getElementById(id);
   el.classList.add('active');
   el.scrollTop=0;
-  window.scrollTo(0,0);
-  document.documentElement.scrollTop=0;
-  document.body.scrollTop=0;
 }
 function addMsg(role,text){
   const msgs=document.getElementById('chatMsgs');
