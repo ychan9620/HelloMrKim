@@ -330,9 +330,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 
 <script>
 // ────────────────────────────────
-// ↓↓↓ API KEY 여기에 입력 ↓↓↓
-const API_KEY = "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";
-// ────────────────────────────────
 // DATA
 // ────────────────────────────────
 const SCENES = {
@@ -471,8 +468,8 @@ async function startScene(key){
 
   // Generate missions via AI
   try{
-    const res=await fetch("https://api.anthropic.com/v1/messages",{
-      method:"POST",headers:{"Content-Type":"application/json","x-api-key":API_KEY,"anthropic-version":"2023-06-01"},
+    const res=await fetch("/api/chat",{
+      method:"POST",headers:{"Content-Type":"application/json"},
       body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:300,
         system:"You generate English learning mission goals. Reply ONLY with a valid JSON array of exactly 3 strings in Korean. No markdown, no explanation.",
         messages:[{role:"user",content:`Generate 3 specific, realistic mission goals for this English roleplay scenario:
@@ -674,8 +671,8 @@ async function generateReport(){
 
   try{
     // ── CALL 1: dialog translation ──
-    const res1=await fetch("https://api.anthropic.com/v1/messages",{
-      method:"POST",headers:{"Content-Type":"application/json","x-api-key":API_KEY,"anthropic-version":"2023-06-01"},
+    const res1=await fetch("/api/chat",{
+      method:"POST",headers:{"Content-Type":"application/json"},
       body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:4096,
         system:"You are a translator. Translate each line to Korean and return ONLY valid JSON array. No markdown.",
         messages:[{role:'user',content:`Translate each line of this conversation to Korean.
@@ -693,8 +690,8 @@ ${dlgLines}`}]})
     document.getElementById('rContent').innerHTML='<div style="text-align:center;padding:60px 0;color:var(--muted)">📊 평가 생성 중... (2/2)<br><small style="font-size:12px;margin-top:8px;display:block">거의 다 됐어요!</small></div>';
 
     // ── CALL 2: evaluation ──
-    const res2=await fetch("https://api.anthropic.com/v1/messages",{
-      method:"POST",headers:{"Content-Type":"application/json","x-api-key":API_KEY,"anthropic-version":"2023-06-01"},
+    const res2=await fetch("/api/chat",{
+      method:"POST",headers:{"Content-Type":"application/json"},
       body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1000,
         system:`You are a warm English tutor. Student: ${profile.name}, age ${profile.age}, level: ${profile.level}. Reply ONLY with valid JSON, no markdown.`,
         messages:[{role:'user',content:`Evaluate this student's English roleplay.
