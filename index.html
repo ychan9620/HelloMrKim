@@ -12,7 +12,7 @@
   --accent:#e8b86d;--accent2:#6d9ee8;--danger:#e86d6d;--success:#6de8a0;
   --text:#f0ede8;--muted:#7a7a8a;
 }
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);height:100vh;overflow:hidden}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text)}
 .screen{display:none;height:100vh;overflow-y:auto;animation:fadeUp .4s ease}
 .screen.active{display:flex;flex-direction:column}
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
@@ -140,7 +140,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);hei
 
 /* ── REPORT ── */
 #sReport{flex-direction:column;align-items:center;padding:48px 20px;
-  background:radial-gradient(ellipse at 50% 0%,#1a1520 0%,var(--bg) 60%)}
+  background:radial-gradient(ellipse at 50% 0%,#1a1520 0%,var(--bg) 60%);
+  position:fixed;inset:0;overflow-y:auto;z-index:100}
 .report-wrap{width:100%;max-width:640px}
 .r-eyebrow{font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
 .r-title{font-family:'Cormorant Garamond',serif;font-size:38px;line-height:1.1;margin-bottom:20px}
@@ -734,11 +735,20 @@ async function sendMsg(){
   if(!text||isLoading||missionEnded)return;
 
   // 개발자 치트키
-  if(text.toLowerCase()==='#finish'){
+  if(text==='#end#'){
     ta.value='';
     missionEnded=true;
     endReason='manual';
     goReport();
+    return;
+  }
+  if(text==='#pass#'){
+    ta.value='';
+    goalsCompleted=goalsCompleted.map(()=>true);
+    scene.goals.forEach((_,i)=>document.getElementById('mg'+i)?.classList.add('done'));
+    missionEnded=true;
+    endReason='success';
+    setTimeout(()=>showOverlay('success'),300);
     return;
   }
   ta.value='';ta.style.height='auto';
