@@ -849,6 +849,7 @@ function closeOverlayCard(btn){
 
 function manualEnd(){
   if(missionEnded){ goReport(); return; }
+  if(history.length===0){ show('sSelect'); return; }
   showInlineConfirm('대화를 종료하고 결과를 볼까요?', ()=>{
     missionEnded=true;
     endReason='manual';
